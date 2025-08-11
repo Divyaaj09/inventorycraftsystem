@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3674159867765696953}
   - component: {fileID: 6153581978058784163}
   - component: {fileID: 7039474006221404065}
+  - component: {fileID: 8811113667405623029}
   m_Layer: 5
   m_Name: stone 1
   m_TagString: Untagged
@@ -102,3 +103,25 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &8811113667405623029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2722533534022661239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1ada36df6f92bf4b85b0709eff488c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTrashable: 0
+  thisName: Silver Ore
+  thisDescription: Raw silver ore mined from deep within the mountains. Needs refining
+    before it can be crafted into weapons, jewelry, or currency.
+  thisFunctionality: Used as a crafting ingredient for armor, weapons, or trade.
+    Could also be sold to merchants for coins.
+  isConsumable: 0
+  healthEffect: 0
+  caloriesEffect: 0
+  hydrationEffect: 0

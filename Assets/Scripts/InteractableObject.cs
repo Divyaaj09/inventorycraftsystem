@@ -7,7 +7,6 @@ public class InteractableObject : MonoBehaviour
     public bool playerInRange;
     public string ItemName;
 
-    // Reference
     public string GetItemName()
     {
         return ItemName;
@@ -15,17 +14,36 @@ public class InteractableObject : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && playerInRange && SelectionManager.Instance.onTarget && SelectionManager.Instance.selectedObject == gameObject )
+        if (Input.GetKeyDown(KeyCode.Mouse0) &&
+            playerInRange &&
+            SelectionManager.Instance.onTarget &&
+            SelectionManager.Instance.selectedObject == gameObject)
         {
             if (!InventorySystem.Instance.CheckIfFull())
             {
                 InventorySystem.Instance.AddToInventory(ItemName);
                 Destroy(gameObject);
-            } else
+            }
+            else
             {
                 Debug.Log("Inventory is full");
             }
-            
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInRange = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInRange = false;
         }
     }
 }

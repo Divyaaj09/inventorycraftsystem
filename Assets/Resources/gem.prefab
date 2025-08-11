@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8974799364518130878}
   - component: {fileID: 344577488680116203}
   - component: {fileID: 7055834382794405819}
+  - component: {fileID: -6814357596195187506}
   m_Layer: 5
   m_Name: gem
   m_TagString: Untagged
@@ -102,3 +103,25 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &-6814357596195187506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9137584819937877837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1ada36df6f92bf4b85b0709eff488c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTrashable: 0
+  thisName: Ruby Gemstone
+  thisDescription: A flawless ruby, glowing faintly with magical energy. Valuable
+    to both jewelers and mages.
+  thisFunctionality: Can be sold for high value, used in magical crafting, or socketed
+    into equipment for buffs (e.g., +fire resistance or +damage).
+  isConsumable: 0
+  healthEffect: 0
+  caloriesEffect: 0
+  hydrationEffect: 0
