@@ -13,6 +13,9 @@ public class SelectionManager : MonoBehaviour
     public GameObject interaction_Info_UI;
     private Text interaction_text;
 
+
+    public Image centerDotImage;
+    public Image handIcon;
     private void Awake()
     {
         // Ensure singleton pattern
@@ -54,26 +57,38 @@ public class SelectionManager : MonoBehaviour
             {
                 onTarget = true;
                 selectedObject = interactable.gameObject;
+                interaction_text.text = interactable.GetItemName();
+                interaction_Info_UI.SetActive(true);
 
-                if (interaction_text != null)
+                if (interactable.CompareTag("pickable"))
                 {
-                    interaction_text.text = interactable.GetItemName();
+                    centerDotImage.gameObject .SetActive(false);
+                    handIcon.gameObject.SetActive(true);
                 }
 
-                interaction_Info_UI?.SetActive(true);
+
+                else
+                {
+                    handIcon.gameObject.SetActive(false);
+                    centerDotImage.gameObject.SetActive(true);
+                }
             }
             else
             {
                 onTarget = false;
-                interaction_Info_UI?.SetActive(false);
-                selectedObject = null;
+                interaction_Info_UI.SetActive(false);
+
+                handIcon.gameObject.SetActive(false);
+                centerDotImage.gameObject.SetActive(true);
             }
         }
         else
         {
             onTarget = false;
-            interaction_Info_UI?.SetActive(false);
-            selectedObject = null;
+            interaction_Info_UI.SetActive(false);
+
+            handIcon.gameObject.SetActive(false);
+            centerDotImage.gameObject.SetActive(true);
         }
     }
 }
