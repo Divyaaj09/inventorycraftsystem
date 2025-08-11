@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventorySystem : MonoBehaviour
 {
-
     public static InventorySystem Instance { get; set; }
 
     public GameObject inventoryScreenUI;
@@ -15,12 +15,15 @@ public class InventorySystem : MonoBehaviour
     public List<string> ItemList = new List<string>();
 
     private GameObject ItemToAdd;
-
     private GameObject whatSlotToEquip;
 
     public bool isOpen;
 
-    public bool isFull;
+    //public bool isFull; 
+
+    public GameObject pickupAlert;
+    public Text pickupName;
+    public Image pickupImage;
 
     private void Awake()
     {
@@ -34,11 +37,10 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
-
     void Start()
     {
         isOpen = false;
-        isFull = false;
+        //isFull = false;
         PopulateSlotList();
     }
 
@@ -53,18 +55,17 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
-
     void Update()
     {
-
+        // Open inventory
         if (Input.GetKeyDown(KeyCode.I) && !isOpen)
         {
-
             Debug.Log("i is pressed");
             inventoryScreenUI.SetActive(true);
             isOpen = true;
-
+            Cursor.lockState = CursorLockMode.None; // Unlock cursor for UI
         }
+        // Close inventory
         else if (Input.GetKeyDown(KeyCode.I) && isOpen)
         {
             inventoryScreenUI.SetActive(false);
@@ -72,26 +73,35 @@ public class InventorySystem : MonoBehaviour
             {
                 Cursor.lockState = CursorLockMode.Locked;
             }
-
             isOpen = false;
         }
     }
 
     public void AddToInventory(string itemName)
     {
-
-        isFull = true;
-        Debug.Log("The inventory is full");
-
         whatSlotToEquip = FindNextEmptySlot();
-        ItemToAdd = Instantiate(Resources.Load<GameObject>(itemName), whatSlotToEquip.transform.position, whatSlotToEquip.transform.rotation);
+        ItemToAdd = Instantiate(
+            Resources.Load<GameObject>(itemName),
+            whatSlotToEquip.transform.position,
+            whatSlotToEquip.transform.rotation
+        );
         ItemToAdd.transform.SetParent(whatSlotToEquip.transform);
 
         ItemList.Add(itemName);
 
+        TriggerPickupPopUp(itemName, ItemToAdd.GetComponent<Image>().sprite);
+
+        ReCalculateList();
+        CraftingSystem.Instance.RefreshNeededItems();
     }
 
 
+    void TriggerPickupPopUp(string itemName, Sprite itemSprite)
+    {
+        pickupAlert.SetActive(true);
+        pickupName.text = itemName;
+        pickupImage.sprite = itemSprite;
+    }
     private GameObject FindNextEmptySlot()
     {
         foreach (GameObject slot in slotList)
@@ -100,14 +110,9 @@ public class InventorySystem : MonoBehaviour
             {
                 return slot;
             }
-
         }
         return new GameObject();
-
-
     }
-
-
 
     public bool CheckIfFull()
     {
@@ -116,43 +121,30 @@ public class InventorySystem : MonoBehaviour
         {
             if (slot.transform.childCount > 0)
             {
-                counter += 1;
+                counter++;
             }
-
         }
-
-
-        if (counter == 20)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return counter == 20;
     }
-
-
 
     public void RemoveItem(string nameToRemove, int amountToRemove)
     {
         int counter = amountToRemove;
 
-        for (var i = slotList.Count - 1; i >= 0; i--)
+        for (var i = slotList.Count - 1; i >= 0; i--)   
         {
             if (slotList[i].transform.childCount > 0)
             {
                 if (slotList[i].transform.GetChild(0).name == nameToRemove + "(Clone)" && counter != 0)
                 {
                     Destroy(slotList[i].transform.GetChild(0).gameObject);
-                    counter -= 1;
+                    counter--;
                 }
             }
         }
 
-
-
-
+        ReCalculateList();
+        CraftingSystem.Instance.RefreshNeededItems();
     }
 
     public void ReCalculateList()
@@ -164,16 +156,9 @@ public class InventorySystem : MonoBehaviour
             if (slot.transform.childCount > 0)
             {
                 string name = slot.transform.GetChild(0).name;
-
-                string str1 = name;
-
-                string str2 = "(Clone)";
-
-                string result = name.Replace(str2, "");
-
+                string result = name.Replace("(Clone)", "");
                 ItemList.Add(result);
             }
         }
-
     }
 }
