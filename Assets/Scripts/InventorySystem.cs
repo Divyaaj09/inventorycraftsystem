@@ -46,7 +46,8 @@ public class InventorySystem : MonoBehaviour
     {
         foreach (Transform child in inventoryScreenUI.transform)
         {
-            if (child.CompareTag("Slot")) {
+            if (child.CompareTag("Slot"))
+            {
                 slotList.Add(child.gameObject);
             }
         }
@@ -67,6 +68,11 @@ public class InventorySystem : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.I) && isOpen)
         {
             inventoryScreenUI.SetActive(false);
+            if (CraftingSystem.Instance.isOpen)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+
             isOpen = false;
         }
     }
@@ -74,15 +80,15 @@ public class InventorySystem : MonoBehaviour
     public void AddToInventory(string itemName)
     {
 
-            isFull = true;
-            Debug.Log("The inventory is full");
-        
-            whatSlotToEquip = FindNextEmptySlot();
-            ItemToAdd = Instantiate(Resources.Load<GameObject>(itemName), whatSlotToEquip.transform.position, whatSlotToEquip.transform.rotation);
-            ItemToAdd.transform.SetParent(whatSlotToEquip.transform);
+        isFull = true;
+        Debug.Log("The inventory is full");
 
-            ItemList.Add(itemName);
-        
+        whatSlotToEquip = FindNextEmptySlot();
+        ItemToAdd = Instantiate(Resources.Load<GameObject>(itemName), whatSlotToEquip.transform.position, whatSlotToEquip.transform.rotation);
+        ItemToAdd.transform.SetParent(whatSlotToEquip.transform);
+
+        ItemList.Add(itemName);
+
     }
 
 
@@ -96,9 +102,9 @@ public class InventorySystem : MonoBehaviour
             }
 
         }
-            return new GameObject();
+        return new GameObject();
 
-        
+
     }
 
 
@@ -108,11 +114,11 @@ public class InventorySystem : MonoBehaviour
         int counter = 0;
         foreach (GameObject slot in slotList)
         {
-            if(slot.transform.childCount > 0)
+            if (slot.transform.childCount > 0)
             {
-                counter+= 1;
+                counter += 1;
             }
-            
+
         }
 
 
@@ -128,6 +134,46 @@ public class InventorySystem : MonoBehaviour
 
 
 
+    public void RemoveItem(string nameToRemove, int amountToRemove)
+    {
+        int counter = amountToRemove;
+
+        for (var i = slotList.Count - 1; i >= 0; i--)
+        {
+            if (slotList[i].transform.childCount > 0)
+            {
+                if (slotList[i].transform.GetChild(0).name == nameToRemove + "(Clone)" && counter != 0)
+                {
+                    Destroy(slotList[i].transform.GetChild(0).gameObject);
+                    counter -= 1;
+                }
+            }
+        }
 
 
+
+
+    }
+
+    public void ReCalculateList()
+    {
+        ItemList.Clear();
+
+        foreach (GameObject slot in slotList)
+        {
+            if (slot.transform.childCount > 0)
+            {
+                string name = slot.transform.GetChild(0).name;
+
+                string str1 = name;
+
+                string str2 = "(Clone)";
+
+                string result = name.Replace(str2, "");
+
+                ItemList.Add(result);
+            }
+        }
+
+    }
 }
